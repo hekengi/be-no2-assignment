@@ -5,7 +5,6 @@ import org.example.beno2assignment.service.ScheduleService;
 import org.example.beno2assignment.dto.ScheduleRequestDto;
 import org.example.beno2assignment.dto.ScheduleResponseDto;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,10 +25,10 @@ public class ScheduleController {
     // LV1 전체 일정 조회
     @GetMapping("")
     public ResponseEntity<List<ScheduleResponseDto>> getAllSchedules(
-            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Long authorId,
             @RequestParam(required = false) String updateDate
     ) {
-        List<ScheduleResponseDto> schedules = scheduleService.getAllSchedules(name, updateDate);
+        List<ScheduleResponseDto> schedules = scheduleService.getAllSchedules(authorId, updateDate);
         return ResponseEntity.ok(schedules);
     }
 

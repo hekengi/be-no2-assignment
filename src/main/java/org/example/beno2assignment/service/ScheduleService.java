@@ -28,22 +28,22 @@ public class ScheduleService {
         scheduleRepository.save(schedule);
 
         return new ScheduleResponseDto(
-                schedule.getId(), schedule.getTitle(), schedule.getName(),
-                schedule.getCreateDate(), schedule.getUpdateDate()
+                schedule.getId(), schedule.getTitle(),
+                schedule.getCreateDate(), schedule.getUpdateDate(),schedule.getAuthorId()
         );
     }
 
     //Lv1 전체 일정 조회
-    public List<ScheduleResponseDto> getAllSchedules(String name, String updateDate) {
-        List<Schedule> schedules = scheduleRepository.findAll(name, updateDate);
+    public List<ScheduleResponseDto> getAllSchedules(Long authorId, String updateDate) {
+        List<Schedule> schedules = scheduleRepository.findAll(authorId, updateDate);
 
         return schedules.stream()
                 .map(schedule -> new ScheduleResponseDto(
                         schedule.getId(),
                         schedule.getTitle(),
-                        schedule.getName(),
                         schedule.getCreateDate(),
-                        schedule.getUpdateDate())
+                        schedule.getUpdateDate(),
+                        schedule.getAuthorId())
                 ).collect(Collectors.toList());
     }
 
@@ -54,9 +54,9 @@ public class ScheduleService {
         return new ScheduleResponseDto(
                 schedule.getId(),
                 schedule.getTitle(),
-                schedule.getName(),
                 schedule.getCreateDate(),
-                schedule.getUpdateDate()
+                schedule.getUpdateDate(),
+                schedule.getAuthorId()
         );
     }
 
@@ -73,7 +73,7 @@ public class ScheduleService {
 
         // title, name 업데이트
         schedule.setTitle(requestDto.getTitle());
-        schedule.setName(requestDto.getName());
+        schedule.setAuthorId(requestDto.getAuthorId());
 
         // 수정일자 업데이트
         String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
@@ -84,8 +84,8 @@ public class ScheduleService {
 
         // 응답 DTO 생성
         return new ScheduleResponseDto(
-                schedule.getId(), schedule.getTitle(), schedule.getName(),
-                schedule.getCreateDate(), schedule.getUpdateDate()
+                schedule.getId(), schedule.getTitle(),
+                schedule.getCreateDate(), schedule.getUpdateDate(), schedule.getAuthorId()
         );
     }
 

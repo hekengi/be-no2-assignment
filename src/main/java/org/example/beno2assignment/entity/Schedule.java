@@ -10,15 +10,15 @@ import org.example.beno2assignment.dto.ScheduleRequestDto;
 @NoArgsConstructor
 public class Schedule {
     private Long id;
-    private String name;
     private String title;
     private String password;
     private String createDate;
     private String updateDate;
+    private Long authorId;
 
     public Schedule(ScheduleRequestDto requestDto) {
         this.title = requestDto.getTitle();
-        this.name = requestDto.getName();
         this.password = requestDto.getPassword();
+        this.authorId = requestDto.getAuthorId();
     }
 }

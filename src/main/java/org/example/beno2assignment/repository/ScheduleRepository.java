@@ -2,7 +2,6 @@ package org.example.beno2assignment.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.example.beno2assignment.entity.Schedule;
-import org.example.beno2assignment.dto.ScheduleRequestDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -22,17 +21,17 @@ public class ScheduleRepository {
 
     // DB에 저장
     public void save(Schedule schedule) {
-        String sql = "INSERT INTO schedule (title, name, password, createdate, updatedate) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO schedule (title, password, createdate, updatedate, authorId) VALUES (?, ?, ?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder(); // JdbcTemplate.update(...) 대신 KeyHolder를 사용해서 자동 생성된 ID 값을 가져와야 함
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, schedule.getTitle());
-            ps.setString(2, schedule.getName());
-            ps.setString(3, schedule.getPassword());
-            ps.setString(4, schedule.getCreateDate());
-            ps.setString(5, schedule.getUpdateDate());
+            ps.setString(2, schedule.getPassword());
+            ps.setString(3, schedule.getCreateDate());
+            ps.setString(4, schedule.getUpdateDate());
+            ps.setLong(5, schedule.getAuthorId());
             return ps;
         }, keyHolder);
 
@@ -44,30 +43,31 @@ public class ScheduleRepository {
 
     // ID로 스케줄 수정
     public void update(Schedule schedule) {
-        String sql = "UPDATE schedule SET title = ?, name = ?, updatedate = ? WHERE id = ?";
+        String sql = "UPDATE schedule SET title = ?, updatedate = ? ,authorId = ? WHERE id = ?";
         jdbcTemplate.update(sql,
                 schedule.getTitle(),
-                schedule.getName(),
                 schedule.getUpdateDate(),
+                schedule.getAuthorId(),
                 schedule.getId());
+
     }
 
-    // Lv1 전체 일정 조회
-    public List<Schedule> findAll(String name, String updateDate) {
+    // 전체 일정 조회
+    public List<Schedule> findAll(Long authorId, String updateDate) {
         StringBuilder sql = new StringBuilder("SELECT * FROM schedule");
         List<Object> params = new ArrayList<>();
 
-        boolean hasName = name != null && !name.isEmpty();
+        boolean hasAuthorId = authorId != null;
         boolean hasDate = updateDate != null && !updateDate.isEmpty();
 
-        if (hasName || hasDate) {
+        if (hasAuthorId || hasDate) {
             sql.append(" WHERE");
-            if (hasName) {
-                sql.append(" name = ?");
-                params.add(name);
+            if (hasAuthorId) {
+                sql.append(" authorId = ?");
+                params.add(authorId);
             }
             if (hasDate) {
-                if (hasName) sql.append(" AND");
+                if (hasAuthorId) sql.append(" AND");
                 sql.append(" DATE(updatedate) = ?");
                 params.add(updateDate);
             }
@@ -79,10 +79,10 @@ public class ScheduleRepository {
             Schedule schedule = new Schedule();
             schedule.setId(rs.getLong("id"));
             schedule.setTitle(rs.getString("title"));
-            schedule.setName(rs.getString("name"));
             schedule.setPassword(rs.getString("password"));
             schedule.setCreateDate(rs.getString("createdate"));
             schedule.setUpdateDate(rs.getString("updatedate"));
+            schedule.setAuthorId(rs.getLong("authorId"));
             return schedule;
         }, params.toArray());
     }
@@ -99,7 +99,6 @@ public class ScheduleRepository {
             Schedule schedule = new Schedule();
             schedule.setId(rs.getLong("id"));
             schedule.setTitle(rs.getString("title"));
-            schedule.setName(rs.getString("name"));
             schedule.setPassword(rs.getString("password"));
             schedule.setCreateDate(rs.getString("createdate"));
             schedule.setUpdateDate(rs.getString("updatedate"));
