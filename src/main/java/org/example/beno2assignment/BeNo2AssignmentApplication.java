@@ -8,6 +8,7 @@ public class BeNo2AssignmentApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(BeNo2AssignmentApplication.class, args);
+
     }
 
 }
