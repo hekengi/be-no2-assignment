@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.example.beno2assignment.dto.ScheduleResponseDto;
 import org.example.beno2assignment.entity.Author;
 import org.example.beno2assignment.entity.Schedule;
+import org.example.beno2assignment.exception.InvalidPasswordException;
+import org.example.beno2assignment.exception.NotFoundException;
 import org.example.beno2assignment.repository.jdbc.AuthorRepository;
 import org.example.beno2assignment.repository.jpa.ScheduleJpaRepository;
 import org.example.beno2assignment.repository.jdbc.ScheduleRepository;
@@ -76,7 +78,14 @@ public class ScheduleService {
 
     // Lv1 선택한 일정 조회
     public ScheduleResponseDto getScheduleById(Long id) {
-        Schedule schedule = scheduleRepository.findById(id);
+
+        // Lv5 예외 처리 추가
+        Schedule schedule = null;
+        try {
+            schedule = scheduleRepository.findById(id);
+        } catch (Exception e) {
+            throw new NotFoundException("해당 일정(ID: " + id + ")을 찾을 수 없습니다.");
+        }
 
         return new ScheduleResponseDto(
                 schedule.getId(),
@@ -91,13 +100,20 @@ public class ScheduleService {
 
     //Lv2 선택한 일정 수정
     public ScheduleResponseDto updateSchedule(Long id, ScheduleRequestDto requestDto) {
-        // 먼저 ID로 스케줄을 조회
-        Schedule schedule = scheduleRepository.findById(id);
 
-        // 비밀번호 비교
-        if (!schedule.getPassword().equals(requestDto.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        // Lv5 ID 조회 실패 시 예외 처리 추가
+        Schedule schedule;
+        try {
+            schedule = scheduleRepository.findById(id);
+        } catch (Exception e) {
+            throw new NotFoundException("해당 일정(ID: " + id + ")을 찾을 수 없습니다.");
         }
+
+        // Lv5 비밀번호 검증
+        if (!schedule.getPassword().equals(requestDto.getPassword())) {
+            throw new InvalidPasswordException("비밀번호가 일치하지 않습니다.");
+        }
+
 
         Author author = authorRepository.findByName(requestDto.getName());
 
@@ -113,12 +129,17 @@ public class ScheduleService {
 
     // Lv2 선택한 일정 삭제
     public void deleteSchedule(Long id, ScheduleRequestDto requestDto) {
-        //ID로  스케줄 조회
-        Schedule schedule = scheduleRepository.findById(id);
 
-        // 비밀번호 비교
+        // Lv5 예외 처리 추가
+        Schedule schedule;
+        try {
+            schedule = scheduleRepository.findById(id);
+        } catch (Exception e) {
+            throw new NotFoundException("해당 일정(ID: " + id + ")을 찾을 수 없습니다.");
+        }
+
         if (!schedule.getPassword().equals(requestDto.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw new InvalidPasswordException("비밀번호가 일치하지 않습니다.");
         }
 
         // 스케줄 삭제
