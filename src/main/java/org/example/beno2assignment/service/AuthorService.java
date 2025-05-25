@@ -3,7 +3,7 @@ package org.example.beno2assignment.service;
 import lombok.RequiredArgsConstructor;
 import org.example.beno2assignment.dto.AuthorRequestDto;
 import org.example.beno2assignment.entity.Author;
-import org.example.beno2assignment.repository.AuthorRepository;
+import org.example.beno2assignment.repository.jdbc.AuthorRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -14,6 +14,7 @@ import java.time.format.DateTimeFormatter;
 public class AuthorService {
     private final AuthorRepository authorRepository;
 
+    // Lv3: Author 생성 API
     public Author createAuthor(AuthorRequestDto requestDto) {
         Author author = new Author();
         author.setName(requestDto.getName());

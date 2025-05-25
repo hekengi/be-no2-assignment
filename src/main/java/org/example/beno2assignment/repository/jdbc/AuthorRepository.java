@@ -1,4 +1,4 @@
-package org.example.beno2assignment.repository;
+package org.example.beno2assignment.repository.jdbc;
 
 import lombok.RequiredArgsConstructor;
 import org.example.beno2assignment.entity.Author;
@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -16,6 +17,23 @@ public class AuthorRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
+    // Lv1
+    public Author findByName(String name) {
+        String sql = "SELECT * FROM author WHERE name = ?";
+        List<Author> result = jdbcTemplate.query(sql, (rs, rowNum) -> {
+            Author author = new Author();
+            author.setId(rs.getLong("id"));
+            author.setName(rs.getString("name"));
+            author.setEmail(rs.getString("email"));
+            author.setCreateDate(rs.getString("createdate"));
+            author.setUpdateDate(rs.getString("updatedate"));
+            return author;
+        }, name);
+
+        return result.isEmpty() ? null : result.get(0);
+    }
+
+    // Lv3
     public void save(Author author) {
         String sql = "INSERT INTO author (name, email, createdate, updatedate) VALUES (?, ?, ?, ?)";
 
@@ -35,6 +53,7 @@ public class AuthorRepository {
         }
     }
 
+    // Lv3
     public Author findById(Long id) {
         String sql = "SELECT * FROM author WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {

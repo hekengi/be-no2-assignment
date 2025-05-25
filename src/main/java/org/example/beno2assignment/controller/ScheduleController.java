@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.example.beno2assignment.service.ScheduleService;
 import org.example.beno2assignment.dto.ScheduleRequestDto;
 import org.example.beno2assignment.dto.ScheduleResponseDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,8 +29,9 @@ public class ScheduleController {
     public ResponseEntity<List<ScheduleResponseDto>> getAllSchedules(
             @RequestParam(required = false) Long authorId,
             @RequestParam(required = false) String updateDate
+            , @RequestParam(required = false) String name
     ) {
-        List<ScheduleResponseDto> schedules = scheduleService.getAllSchedules(authorId, updateDate);
+        List<ScheduleResponseDto> schedules = scheduleService.getAllSchedules(authorId, name, updateDate);
         return ResponseEntity.ok(schedules);
     }
 
@@ -57,6 +60,11 @@ public class ScheduleController {
         return ResponseEntity.ok("일정이 삭제되었습니다.");
     }
 
-
-
+    // Lv4
+    @GetMapping("/paginated")
+    public ResponseEntity<Page<ScheduleResponseDto>> getAllSchedulesPaginated(Pageable pageable) {
+        Page<ScheduleResponseDto> result = scheduleService.getAllSchedulesPaginated(pageable);
+        return ResponseEntity.ok(result);
+    }
 }
+

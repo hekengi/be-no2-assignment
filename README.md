@@ -5,6 +5,14 @@
   Postman을 통해 작성된 API 명세서를 아래 링크에서 확인  
   👉 [API 문서](https://hyoeunchoi.postman.co/workspace/My-Workspace~35bd902f-2bad-4464-815d-e599dd0a7640/collection/45173639-f47b444a-c27a-419b-93dc-4e04b46fee69?action=share&creator=45173639)
 
+- ![img](./images/img_1.png)
+- ![img](./images/img_2.png)
+- ![img](./images/img_3.png)
+- ![img](./images/img_4.png)
+- ![img](./images/img_5.png)
+- ![img](./images/img_6.png)
+- ![img](./images/img_7.png)
+
 - [x] **ERD(Entity Relationship Diagram)**  
   ![ERD](./images/img.png)
 
@@ -44,3 +52,15 @@
   특정 일정 ID를 기반으로 해당 일정을 작성한 작성자의 정보를 조회할 수 있다
 - [x] 기존에는 일정에 작성자 이름만 저장되어 있었지만 **동명이인 문제**와 **데이터 정규화**를 해결하기 위해 작성자를 별도의 테이블(`author`)로 분리
 - [x] 일정(`schedule`)과 1:N 관계로 연동
+
+---
+✅ Lv 4 - 일정 목록 페이징 처리 (도전 과제)
+- [x]  `페이지 번호`와 `페이지 크기`를 쿼리 파라미터로 전달하여 요청하는 항목을 나타냅니다.
+- [x]  전달받은 페이지 번호와 크기를 기준으로 쿼리를 작성하여 필요한 데이터만을 조회하고 반환
+- [x]  등록된 일정 목록을 `페이지 번호`와 `크기`를 기준으로 모두 조회
+- [x]  조회한 일정 목록에는 `작성자 이름`이 포함
+- [x]  범위를 넘어선 페이지를 요청하는 경우 빈 배열을 반환
+- [x]  Paging 객체를 활용할 수 있음
+
+---
+
